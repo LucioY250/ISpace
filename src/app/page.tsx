@@ -9,6 +9,8 @@ import Header from '@/components/app/Header';
 import ChatPanel from '@/components/app/ChatPanel';
 import DesignView from '@/components/app/DesignView';
 import ControlsPanel from '@/components/app/ControlsPanel';
+import { ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export interface Design {
   imageUrl: string;
@@ -26,8 +28,16 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [currentDesign, setCurrentDesign] = useState<Design | null>(null);
   const [history, setHistory] = useState<Design[]>([]);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: 'ai-welcome',
+      sender: 'ai',
+      text: 'Welcome to ISpace! How can I help you design your perfect room today?',
+    },
+  ]);
   const {toast} = useToast();
+  const [isLeftPanelOpen, setIsLeftPanelOpen] = useState(true);
+  const [isRightPanelOpen, setIsRightPanelOpen] = useState(true);
 
   const handleSendMessage = async (prompt: string, image?: string) => {
     if (!prompt.trim()) return;
@@ -49,7 +59,7 @@ export default function Home() {
       const aiMessage: Message = {
         id: `ai-${Date.now()}`,
         sender: 'ai',
-        text: "Here's the design based on your description:",
+        text: 'Excellent choice! Do you have any specific colors or furniture styles in mind?',
       };
       setMessages(prev => [...prev, aiMessage]);
     } catch (error) {
@@ -119,16 +129,26 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-background text-foreground font-body">
-      <Header onExport={handleExport} />
-      <main className="flex flex-1 overflow-hidden">
-        <div className="w-[380px] border-r border-border flex flex-col">
+    <div className="flex h-screen bg-background text-foreground">
+      {isLeftPanelOpen && (
+        <div className="w-[380px] flex-shrink-0 bg-secondary/50">
           <ChatPanel messages={messages} onSendMessage={handleSendMessage} isLoading={isLoading} />
         </div>
-        <div className="flex-1 flex items-center justify-center p-8 bg-muted/50">
+      )}
+      <main className="flex-1 flex flex-col overflow-hidden relative">
+        <Header onExport={handleExport} />
+        <div className="flex-1 flex items-center justify-center p-8 relative">
+           <Button variant="ghost" size="icon" className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background rounded-full" onClick={() => setIsLeftPanelOpen(!isLeftPanelOpen)}>
+            {isLeftPanelOpen ? <ChevronsLeft /> : <ChevronsRight />}
+          </Button>
           <DesignView design={currentDesign} isLoading={isLoading} />
+          <Button variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background rounded-full" onClick={() => setIsRightPanelOpen(!isRightPanelOpen)}>
+            {isRightPanelOpen ? <ChevronsRight /> : <ChevronsLeft />}
+          </Button>
         </div>
-        <div className="w-[380px] border-l border-border flex flex-col">
+      </main>
+      {isRightPanelOpen && (
+        <div className="w-[380px] flex-shrink-0 bg-secondary/50">
           <ControlsPanel
             history={history}
             onSelectVersion={handleSelectVersion}
@@ -136,7 +156,7 @@ export default function Home() {
             canIterate={!!currentDesign && !isLoading}
           />
         </div>
-      </main>
+      )}
     </div>
   );
 }
