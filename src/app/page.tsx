@@ -130,33 +130,57 @@ export default function Home() {
 
   return (
     <div className="flex h-screen bg-background text-foreground">
-      {isLeftPanelOpen && (
-        <div className="w-[380px] flex-shrink-0 bg-secondary/50">
-          <ChatPanel messages={messages} onSendMessage={handleSendMessage} isLoading={isLoading} />
-        </div>
-      )}
+      <div
+        className="transition-all duration-300 flex-shrink-0"
+        style={{ width: isLeftPanelOpen ? '380px' : '0px' }}
+      >
+        {isLeftPanelOpen && (
+          <div className="w-[380px] bg-secondary/50 h-full">
+            <ChatPanel messages={messages} onSendMessage={handleSendMessage} isLoading={isLoading} />
+          </div>
+        )}
+      </div>
+
       <main className="flex-1 flex flex-col overflow-hidden relative">
         <Header onExport={handleExport} />
         <div className="flex-1 flex items-center justify-center p-8 relative">
-           <Button variant="ghost" size="icon" className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background rounded-full" onClick={() => setIsLeftPanelOpen(!isLeftPanelOpen)}>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background rounded-l-none rounded-r-full h-24 w-8"
+            onClick={() => setIsLeftPanelOpen(!isLeftPanelOpen)}
+          >
             {isLeftPanelOpen ? <ChevronsLeft /> : <ChevronsRight />}
           </Button>
+
           <DesignView design={currentDesign} isLoading={isLoading} />
-          <Button variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background rounded-full" onClick={() => setIsRightPanelOpen(!isRightPanelOpen)}>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background rounded-r-none rounded-l-full h-24 w-8"
+            onClick={() => setIsRightPanelOpen(!isRightPanelOpen)}
+          >
             {isRightPanelOpen ? <ChevronsRight /> : <ChevronsLeft />}
           </Button>
         </div>
       </main>
-      {isRightPanelOpen && (
-        <div className="w-[380px] flex-shrink-0 bg-secondary/50">
-          <ControlsPanel
-            history={history}
-            onSelectVersion={handleSelectVersion}
-            onIterate={handleIterate}
-            canIterate={!!currentDesign && !isLoading}
-          />
-        </div>
-      )}
+
+      <div
+        className="transition-all duration-300 flex-shrink-0"
+        style={{ width: isRightPanelOpen ? '380px' : '0px' }}
+      >
+        {isRightPanelOpen && (
+          <div className="w-[380px] bg-secondary/50 h-full">
+            <ControlsPanel
+              history={history}
+              onSelectVersion={handleSelectVersion}
+              onIterate={handleIterate}
+              canIterate={!!currentDesign && !isLoading}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

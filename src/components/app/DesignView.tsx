@@ -3,8 +3,7 @@ import type {FC} from 'react';
 import Image from 'next/image';
 import type {Design} from '@/app/page';
 import {Card, CardContent} from '@/components/ui/card';
-import {ImageIcon, ChevronLeft, ChevronRight} from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import {ImageIcon} from 'lucide-react';
 
 interface DesignViewProps {
   design: Design | null;
@@ -14,16 +13,6 @@ interface DesignViewProps {
 const DesignView: FC<DesignViewProps> = ({design, isLoading}) => {
   return (
     <div className="w-full h-full flex items-center justify-center relative">
-       {design && (
-        <>
-          <Button variant="ghost" size="icon" className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background rounded-full">
-            <ChevronLeft />
-          </Button>
-          <Button variant="ghost" size="icon" className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background rounded-full">
-            <ChevronRight />
-          </Button>
-        </>
-      )}
       <Card className="w-full h-full max-w-4xl aspect-video rounded-lg shadow-lg overflow-hidden flex items-center justify-center bg-card border-none">
         <CardContent className="p-0 w-full h-full flex items-center justify-center">
           {isLoading ? (
