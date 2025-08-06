@@ -6,7 +6,7 @@ import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
 import {ScrollArea} from '@/components/ui/scroll-area';
 import {Avatar, AvatarFallback} from '@/components/ui/avatar';
-import {Send, Image as ImageIcon, CornerDownLeft} from 'lucide-react';
+import {Send, Image as ImageIcon, CornerDownLeft, X} from 'lucide-react';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { ChevronDown } from 'lucide-react';
 
@@ -56,6 +56,13 @@ const ChatPanel: FC<ChatPanelProps> = ({messages, onSendMessage, isLoading}) => 
       reader.readAsDataURL(file);
     }
   };
+
+  const removeImage = () => {
+    setImage(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  }
 
   return (
     <div className="flex flex-col h-full">
@@ -115,6 +122,14 @@ const ChatPanel: FC<ChatPanelProps> = ({messages, onSendMessage, isLoading}) => 
         </div>
       </ScrollArea>
       <div className="p-4 border-t border-border">
+        {image && (
+          <div className="relative mb-2 w-fit">
+            <Image src={image} alt="Preview" width={80} height={80} className="rounded-md" />
+            <Button size="icon" variant="destructive" className="absolute -top-2 -right-2 h-6 w-6 rounded-full" onClick={removeImage}>
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
         <div className="relative">
           <Input
             type="file"
@@ -131,7 +146,7 @@ const ChatPanel: FC<ChatPanelProps> = ({messages, onSendMessage, isLoading}) => 
             onClick={() => fileInputRef.current?.click()}
             aria-label="Attach image"
           >
-            {image ? <CornerDownLeft /> : <ImageIcon />}
+            <ImageIcon />
           </Button>
 
           <Input
@@ -142,7 +157,7 @@ const ChatPanel: FC<ChatPanelProps> = ({messages, onSendMessage, isLoading}) => 
             className="pl-12 pr-12 h-12 rounded-full bg-input border-border focus:ring-accent"
           />
 
-          <Button size="icon" onClick={handleSend} disabled={isLoading || !prompt.trim()} aria-label="Send message" className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground">
+          <Button size="icon" onClick={handleSend} disabled={isLoading || (!prompt.trim() && !image) } aria-label="Send message" className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground">
             <Send className="h-4 w-4" />
           </Button>
         </div>
