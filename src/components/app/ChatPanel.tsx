@@ -130,36 +130,28 @@ const ChatPanel: FC<ChatPanelProps> = ({messages, onSendMessage, isLoading}) => 
             </Button>
           </div>
         )}
-        <div className="relative">
-          <Input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            className="hidden"
-            accept="image/*"
-            id="file-upload"
-          />
-          <Button
-            size="icon"
-            variant="ghost"
-            className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground"
-            onClick={() => fileInputRef.current?.click()}
-            aria-label="Attach image"
-          >
-            <ImageIcon />
-          </Button>
-
-          <Input
-            value={prompt}
-            onChange={e => setPrompt(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Send a message..."
-            className="pl-12 pr-12 h-12 rounded-full bg-input border-border focus:ring-accent"
-          />
-
-          <Button size="icon" onClick={handleSend} disabled={isLoading || (!prompt.trim() && !image) } aria-label="Send message" className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground">
-            <Send className="h-4 w-4" />
-          </Button>
+        <div className="relative flex items-center gap-2">
+            <Input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              className="hidden"
+              accept="image/*"
+              id="file-upload"
+            />
+             <Avatar className="h-9 w-9 border-2 border-primary cursor-pointer" onClick={() => fileInputRef.current?.click()}>
+              <AvatarFallback className='bg-primary text-primary-foreground'>N</AvatarFallback>
+            </Avatar>
+            <Input
+              value={prompt}
+              onChange={e => setPrompt(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Send a message..."
+              className="flex-1 h-12 rounded-full bg-input border-border focus:ring-accent"
+            />
+            <Button size="icon" onClick={handleSend} disabled={isLoading || (!prompt.trim() && !image) } aria-label="Send message" className="h-8 w-8 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground">
+              <Send className="h-4 w-4" />
+            </Button>
         </div>
       </div>
     </div>
